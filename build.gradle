@@ -15,11 +15,14 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+jar {
+    exclude('ai/quantumsense/tgmonitor/test/**')
+}
 allprojects {
     repositories {
         maven { url "https://jitpack.io" }
     }
 }
 dependencies {
-    implementation 'com.github.tg-monitor:monitor:3ed45eb57e9138569c6165db1386d7f2ee6ac39a'
+    implementation 'com.github.tg-monitor:monitor:master-SNAPSHOT'
 }
