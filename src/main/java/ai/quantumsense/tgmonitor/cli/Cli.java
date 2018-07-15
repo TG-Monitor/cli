@@ -1,8 +1,11 @@
 package ai.quantumsense.tgmonitor.cli;
 
-import ai.quantumsense.tgmonitor.monitor.control.MonitorControl;
-import ai.quantumsense.tgmonitor.monitor.data.MonitorData;
-import ai.quantumsense.tgmonitor.monitor.logincode.LoginCodeManagerFactory;
+import ai.quantumsense.tgmonitor.entities.Emails;
+import ai.quantumsense.tgmonitor.entities.Patterns;
+import ai.quantumsense.tgmonitor.entities.Peers;
+import ai.quantumsense.tgmonitor.monitor.LoginCodePrompt;
+import ai.quantumsense.tgmonitor.monitor.Monitor;
+import ai.quantumsense.tgmonitor.servicelocator.ServiceLocator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,22 +15,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class Cli {
+public class Cli implements LoginCodePrompt {
 
-    MonitorControl monitorControl;
-    MonitorData monitorData;
+    private ServiceLocator<Peers> peersLocator;
+    private ServiceLocator<Patterns> patternsLocator;
+    private ServiceLocator<Emails> emailsLocator;
+    private ServiceLocator<Monitor> monitorLocator;
+
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public Cli(MonitorControl monitorControl, MonitorData monitorData, LoginCodeManagerFactory loginCodeManagerFactory) {
-        this.monitorControl = monitorControl;
-        this.monitorData = monitorData;
-        loginCodeManagerFactory.registerLoginCodeReader(new CliLoginCodeReader());
+    public Cli(ServiceLocator<Peers> peersLocator,
+               ServiceLocator<Patterns> patternsLocator,
+               ServiceLocator<Emails> emailsLocator,
+               ServiceLocator<Monitor> monitorLocator,
+               ServiceLocator<LoginCodePrompt> loginCodePromptLocator) {
+        this.peersLocator = peersLocator;
+        this.patternsLocator = patternsLocator;
+        this.emailsLocator = emailsLocator;
+        this.monitorLocator = monitorLocator;
+        if (loginCodePromptLocator != null)
+            loginCodePromptLocator.registerService(this);
     }
 
-    public void run() {
+    public void start() {
         System.out.print("Please enter your phone number: ");
         String phoneNumber = readLine();
-        monitorControl.login(phoneNumber);
+        monitorLocator.getService().login(phoneNumber);
         System.out.println("You are logged in with " + phoneNumber);
 
         List<String> cmd;
@@ -102,13 +115,13 @@ public class Cli {
     private void add(Type type, String item) {
         switch (type) {
             case PEER:
-                monitorData.addPeer(item);
+                peersLocator.getService().addPeer(item);
                 break;
             case PATTERN:
-                monitorData.addPattern(item);
+                patternsLocator.getService().addPattern(item);
                 break;
             case EMAIL:
-                monitorData.addEmail(item);
+                emailsLocator.getService().addEmail(item);
                 break;
         }
     }
@@ -116,13 +129,13 @@ public class Cli {
     private void remove(Type type, String item) {
         switch (type) {
             case PEER:
-                monitorData.removePeer(item);
+                peersLocator.getService().removePeer(item);
                 break;
             case PATTERN:
-                monitorData.removePattern(item);
+                patternsLocator.getService().removePattern(item);
                 break;
             case EMAIL:
-                monitorData.removeEmail(item);
+                emailsLocator.getService().removeEmail(item);
                 break;
         }
     }
@@ -131,13 +144,13 @@ public class Cli {
         Set<String> items = null;
         switch (type) {
             case PEER:
-                items = monitorData.getPeers();
+                items = peersLocator.getService().getPeers();
                 break;
             case PATTERN:
-                items = monitorData.getPatterns();
+                items = patternsLocator.getService().getPatterns();
                 break;
             case EMAIL:
-                items = monitorData.getEmails();
+                items = emailsLocator.getService().getEmails();
                 break;
         }
         for (String i : items)
@@ -145,7 +158,7 @@ public class Cli {
     }
 
     private void account() {
-        System.out.println("You are logged in with " + monitorControl.getPhoneNumber());
+        System.out.println("You are logged in with " + monitorLocator.getService().getPhoneNumber());
     }
 
     private void invalidCommand() {
@@ -170,6 +183,12 @@ public class Cli {
         List<String> cmd = new LinkedList<>(Arrays.asList(line.split("\\s+")));
         while (cmd.remove(""));
         return cmd;
+    }
+
+    @Override
+    public String promptLoginCode() {
+        System.out.print("Enter login code: ");
+        return readLine();
     }
 
     private enum Type {

@@ -1,6 +1,5 @@
 package ai.quantumsense.tgmonitor.cli;
 
-import ai.quantumsense.tgmonitor.monitor.logincode.LoginCodeManagerImplFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +14,7 @@ public class ParseCommandTest {
 
     @BeforeClass
     public static void createCli() {
-        cli = new Cli(null, null, new LoginCodeManagerImplFactory());
+        cli = new Cli(null, null, null, null, null);
     }
 
     @Test
