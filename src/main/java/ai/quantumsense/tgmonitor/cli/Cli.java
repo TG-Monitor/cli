@@ -85,6 +85,7 @@ public class Cli implements LoginCodePrompt {
                     help();
                     break;
                 case "quit":
+                    logout();
                     break loop;
                 case "":
                     break;
@@ -163,6 +164,11 @@ public class Cli implements LoginCodePrompt {
 
     private void invalidCommand() {
         System.out.println("Invalid command: type \"help\" for usage.");
+    }
+
+    private void logout() {
+        monitorLocator.getService().logout();
+        System.out.println("You have been logged out");
     }
 
     private void prompt() {
