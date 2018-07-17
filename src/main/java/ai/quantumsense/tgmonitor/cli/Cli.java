@@ -1,5 +1,6 @@
 package ai.quantumsense.tgmonitor.cli;
 
+import ai.quantumsense.tgmonitor.cli.parsing.CommandParserImpl;
 import ai.quantumsense.tgmonitor.entities.Emails;
 import ai.quantumsense.tgmonitor.entities.Patterns;
 import ai.quantumsense.tgmonitor.entities.Peers;
@@ -21,6 +22,8 @@ public class Cli implements LoginCodePrompt {
     private ServiceLocator<Patterns> patternsLocator;
     private ServiceLocator<Emails> emailsLocator;
     private ServiceLocator<Monitor> monitorLocator;
+
+    private CommandParser parser = new CommandParserImpl();
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -47,7 +50,7 @@ public class Cli implements LoginCodePrompt {
 
         loop: while (true) {
             prompt();
-            cmd = parseCommand(readLine());
+            cmd = parser.parse(readLine());
             if (cmd.isEmpty()) continue;
 
             switch (cmd.get(0)) {
@@ -183,12 +186,6 @@ public class Cli implements LoginCodePrompt {
             e.printStackTrace();
         }
         return line;
-    }
-
-     List<String> parseCommand(String line) {
-        List<String> cmd = new LinkedList<>(Arrays.asList(line.split("\\s+")));
-        while (cmd.remove(""));
-        return cmd;
     }
 
     @Override

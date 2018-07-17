@@ -20,7 +20,7 @@ public class CliTest {
     private static Cli cli;
     static {
         ServiceLocator<Peers> peersLocator = new ServiceLocator<Peers>() {
-            Peers peers = new PeersImpl(set -> {}, this);
+            Peers peers = new PeersImpl(this);
             @Override
             public void registerService(Peers peers) {}
             @Override
@@ -77,6 +77,12 @@ public class CliTest {
                 public boolean isLoggedIn() {
                     return phoneNumber == null;
                 }
+
+                @Override
+                public void start() {}
+
+                @Override
+                public void stop() {}
 
                 @Override
                 public String getPhoneNumber() {
