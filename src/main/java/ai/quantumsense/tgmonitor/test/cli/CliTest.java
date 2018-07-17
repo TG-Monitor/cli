@@ -12,8 +12,7 @@ import ai.quantumsense.tgmonitor.monitor.Monitor;
 import ai.quantumsense.tgmonitor.servicelocator.ServiceLocator;
 
 /**
- * Dry run of the CLI. The login and the starting of monitors (with "addpeer"
- * command) is mocked (doing nothing).
+ * Dry-running the CLI. There is a fake login procedure at each startup.
  */
 public class CliTest {
 
@@ -59,7 +58,8 @@ public class CliTest {
         };
         ServiceLocator<Monitor> monitorLocator = new ServiceLocator<Monitor>() {
             Monitor monitor = new Monitor() {
-                String phoneNumber = null;
+                private String phoneNumber = null;
+                private boolean isRunning = false;
                 @Override
                 public void login(String phoneNumber) {
                     this.phoneNumber = phoneNumber;
@@ -72,20 +72,26 @@ public class CliTest {
                 }
                 @Override
                 public void logout() {}
-
                 @Override
                 public boolean isLoggedIn() {
-                    return phoneNumber == null;
+                    return true; //phoneNumber != null;
                 }
-
                 @Override
-                public void start() {}
-
+                public void start() {
+                    isRunning = true;
+                }
                 @Override
-                public void stop() {}
-
+                public void stop() {
+                    isRunning = false;
+                }
+                @Override
+                public boolean isRunning() {
+                    return isRunning;
+                }
                 @Override
                 public String getPhoneNumber() {
+                    if (phoneNumber == null)
+                        phoneNumber = "+417891234567";
                     return phoneNumber;
                 }
             };
@@ -100,6 +106,6 @@ public class CliTest {
     }
 
     public static void main(String[] args) {
-        cli.start();
+        cli.launch();
     }
 }
