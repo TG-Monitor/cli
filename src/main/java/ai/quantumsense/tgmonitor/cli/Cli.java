@@ -96,7 +96,7 @@ public class Cli implements LoginCodePrompt {
                 case "":
                     break;
                 default:
-                    println(invalidCommand()); break;
+                    println(invalidCommand(cmd)); break;
             }
         }
     }
@@ -211,8 +211,8 @@ public class Cli implements LoginCodePrompt {
         print("> ");
     }
 
-    private String invalidCommand() {
-        return "Invalid command: type \"help\" for usage.";
+    private String invalidCommand(String cmd) {
+        return "Invalid command '" + cmd + "'. Type \"help\" for printing usage.";
     }
 
     private String readLine() {
