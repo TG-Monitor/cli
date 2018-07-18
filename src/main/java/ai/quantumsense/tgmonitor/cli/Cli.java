@@ -177,16 +177,19 @@ public class Cli implements LoginCodePrompt {
     }
 
     private Set<String> list(Entity entity) {
+        Set<String> s;
         switch (entity) {
             case PEER:
-                return peersLocator.getService().getPeers();
+                s =  peersLocator.getService().getPeers(); break;
             case PATTERN:
-                return patternsLocator.getService().getPatterns();
+                s = patternsLocator.getService().getPatterns(); break;
             case EMAIL:
-                return emailsLocator.getService().getEmails();
+                s = emailsLocator.getService().getEmails(); break;
             default:
-                return null;
+                s = null;
         }
+        if (s.isEmpty()) s.add("<empty>");
+        return s;
     }
 
     private String account() {
