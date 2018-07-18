@@ -30,5 +30,8 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'com.github.tg-monitor:monitor:0.0.1'
+    implementation 'com.github.tg-monitor:monitor:0.0.2'
+    implementation 'com.github.tg-monitor:entities:0.0.1'
+    implementation 'com.github.tg-monitor:servicelocator:0.0.1'
+
 }
