@@ -212,7 +212,7 @@ public class Cli implements LoginCodePrompt {
     }
 
     private String invalidCommand(String cmd) {
-        return "Invalid command '" + cmd + "'. Type \"help\" for printing usage.";
+        return "Invalid command '" + cmd + "'. Type \"help\" for usage.";
     }
 
     private String readLine() {
