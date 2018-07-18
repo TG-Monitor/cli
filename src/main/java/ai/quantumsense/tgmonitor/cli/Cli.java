@@ -18,6 +18,8 @@ import java.util.Set;
 
 public class Cli implements LoginCodePrompt {
 
+    private static final String VERSION = "0.0.1";
+
     private ServiceLocator<Peers> peersLocator;
     private ServiceLocator<Patterns> patternsLocator;
     private ServiceLocator<Emails> emailsLocator;
@@ -103,56 +105,57 @@ public class Cli implements LoginCodePrompt {
 
     private String help() {
         StringBuilder sb = new StringBuilder();
-        sb.append("USAGE\n\n");
+        sb.append("\nUSAGE\n");
 //        sb.append("  start                 Start monitor\n");
 //        sb.append("  stop                  Stop monitor\n");
 //        sb.append("  status                Print monitor status (whether it's running or not)\n");
-        sb.append("  peers                 Print current list of peers (groups or channels)\n");
-        sb.append("  addpeers <peer>...    Add one or more new peers\n");
-        sb.append("  rmpeers <peer>...     Remove one or more peers\n");
-        sb.append("  pats                  Print current list of patterns\n");
-        sb.append("  addpats <pattern>...  Add one or more new patterns\n");
-        sb.append("  rmpats <pattern>...   Remove one or more patterns\n");
-        sb.append("  emails                Print current list of notification email addresses\n");
-        sb.append("  addemails <email>...  Add one or more new email addresses\n");
-        sb.append("  rmemails <email>...   Remove one or more email addresses\n");
-        sb.append("  account               Print information about used Telegram account\n");
-        sb.append("  quit                  Stop monitor, close app, but stay logged in\n");
-        sb.append("  logout                Stop monitor, close app, and log out\n");
-        sb.append("  help                  Print this help message\n");
-        sb.append("\nNOTES\n\n");
-        sb.append("  - <peer> refers to the username of a Telegram group or channel.\n");
-        sb.append("      * For example: alethena_official\n");
-        sb.append("  - <peer> is case-insensitive.\n");
-        sb.append("      * For example: Alethena_OFFICIAL = alethena_official\n");
-        sb.append("  - A single <pattern> may consist of one or multiple words. If it's multiple\n");
-        sb.append("    words, then <pattern> must be enclosed with single or double quotes.\n");
-        sb.append("       * For example: \"ico scam\"\n");
-        sb.append("  - Patterns are case insensitive.\n");
-        sb.append("      * For example: BTC = btc\n");
-        sb.append("\nEXAMPLES\n\n");
-        sb.append("  > addpeers group1 group2 group3\n");
-        sb.append("  > addpats ethereum btc \"falling down\" 'ico scam'\n");
-        sb.append("  > rmpats 'falling down'");
+        sb.append("    peers                 Print current list of peers (groups or channels)\n");
+        sb.append("    addpeers <peer>...    Add one or more peers\n");
+        sb.append("    rmpeers <peer>...     Remove one or more peers\n");
+        sb.append("    pats                  Print current list of patterns\n");
+        sb.append("    addpats <pattern>...  Add one or more patterns\n");
+        sb.append("    rmpats <pattern>...   Remove one or more patterns\n");
+        sb.append("    emails                Print current list of notification email addresses\n");
+        sb.append("    addemails <email>...  Add one or more email addresses\n");
+        sb.append("    rmemails <email>...   Remove one or more email addresses\n");
+        sb.append("    account               Print information about used Telegram account\n");
+        sb.append("    quit                  Stop monitor, close app, but stay logged in\n");
+        sb.append("    logout                Stop monitor, close app, and log out\n");
+        sb.append("    help                  Print this help message\n");
+        sb.append("\nNOTES\n");
+        sb.append("    * A <peer> is the username of a Telegram group or channel\n");
+        sb.append("        * Example: alethena_official\n");
+        sb.append("    * Usernames are case-insensitive\n");
+        sb.append("        * Example: Alethena_OFFICIAL = alethena_official\n");
+        sb.append("    * A <pattern> can be a single word, or multiple words enclosed in quotes\n");
+        sb.append("        * Example: bitcoin ico \"initial coin offering\"\n");
+        sb.append("    * Patterns are case-insensitive\n");
+        sb.append("        * Example: BTC = btc\n");
+        sb.append("\nEXAMPLES\n");
+        sb.append("    > addpeers group1 group2 group3\n");
+        sb.append("    > addpats btc bitcoin \"ico scam\" \"market crash\"\n");
+        sb.append("    > addemails all@equility.ch\n");
+        sb.append("\nVERSION\n");
+        sb.append("    TG-Monitor " + VERSION + "\n");
         return sb.toString();
     }
 
-    private void start() {
-        Monitor m = monitorLocator.getService();
-        if (!m.isRunning()) m.start();
-    }
-
-    private void stop() {
-        Monitor m = monitorLocator.getService();
-        if (m.isRunning()) m.stop();
-    }
-
-    private String status() {
-        if (monitorLocator.getService().isRunning())
-            return "Running";
-        else
-            return "Stopped";
-    }
+//    private void start() {
+//        Monitor m = monitorLocator.getService();
+//        if (!m.isRunning()) m.start();
+//    }
+//
+//    private void stop() {
+//        Monitor m = monitorLocator.getService();
+//        if (m.isRunning()) m.stop();
+//    }
+//
+//    private String status() {
+//        if (monitorLocator.getService().isRunning())
+//            return "Running";
+//        else
+//            return "Stopped";
+//    }
 
     private void add(Entity entity, Set<String> items) {
         switch (entity) {
