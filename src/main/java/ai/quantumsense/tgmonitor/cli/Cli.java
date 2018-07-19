@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class Cli implements LoginCodePrompt {
 
-    private static final String VERSION = "0.0.1";
+    private static final String VERSION = "0.0.4";
 
     private ServiceLocator<Peers> peersLocator;
     private ServiceLocator<Patterns> patternsLocator;
@@ -44,6 +44,8 @@ public class Cli implements LoginCodePrompt {
 
     public void launch() {
 
+        println("TG-Monitor " + VERSION);
+
         if (!monitorLocator.getService().isLoggedIn()) {
             System.out.print("Please enter your phone number: ");
             String phoneNumber = readLine();
@@ -52,11 +54,17 @@ public class Cli implements LoginCodePrompt {
         println(account());
         monitorLocator.getService().start();
 
-        List<String> cmdline;
         loop: while (true) {
             prompt();
-            
-            cmdline = parser.parse(readLine());
+            String line = readLine();
+
+            // If entering Ctrl-D
+            if (line == null) {
+                quit();
+                break;
+            }
+
+            List<String> cmdline = parser.parse(line);
             if (cmdline.isEmpty()) continue;
             
             String cmd = cmdline.get(0);
