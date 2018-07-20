@@ -1,4 +1,4 @@
-package ai.quantumsense.tgmonitor.cli.parsing;
+package ai.quantumsense.tgmonitor.cli.commandparsing;
 
 import ai.quantumsense.tgmonitor.cli.CommandParser;
 

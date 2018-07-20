@@ -7,8 +7,9 @@ import ai.quantumsense.tgmonitor.entities.Patterns;
 import ai.quantumsense.tgmonitor.entities.PatternsImpl;
 import ai.quantumsense.tgmonitor.entities.Peers;
 import ai.quantumsense.tgmonitor.entities.PeersImpl;
-import ai.quantumsense.tgmonitor.monitor.LoginCodePrompt;
 import ai.quantumsense.tgmonitor.monitor.Monitor;
+import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacade;
+import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacadeImpl;
 import ai.quantumsense.tgmonitor.servicelocator.ServiceLocator;
 
 /**
@@ -45,14 +46,14 @@ public class CliTest {
                 return emails;
             }
         };
-        ServiceLocator<LoginCodePrompt> loginCodePromptLocator = new ServiceLocator<LoginCodePrompt>() {
-            LoginCodePrompt loginCodePrompt = null;
+        ServiceLocator<MonitorFacade.LoginCodePrompt> loginCodePromptLocator = new ServiceLocator<MonitorFacade.LoginCodePrompt>() {
+            MonitorFacade.LoginCodePrompt loginCodePrompt = null;
             @Override
-            public void registerService(LoginCodePrompt loginCodePrompt) {
+            public void registerService(MonitorFacade.LoginCodePrompt loginCodePrompt) {
                 this.loginCodePrompt = loginCodePrompt;
             }
             @Override
-            public LoginCodePrompt getService() {
+            public MonitorFacade.LoginCodePrompt getService() {
                 return loginCodePrompt;
             }
         };
@@ -102,7 +103,8 @@ public class CliTest {
                 return monitor;
             }
         };
-        cli = new Cli(peersLocator, patternsLocator, emailsLocator, monitorLocator, loginCodePromptLocator);
+        MonitorFacade monitorFacade = new MonitorFacadeImpl(monitorLocator, peersLocator, patternsLocator, emailsLocator, loginCodePromptLocator);
+        cli = new Cli(monitorFacade, "0.0.1");
     }
 
     public static void main(String[] args) {

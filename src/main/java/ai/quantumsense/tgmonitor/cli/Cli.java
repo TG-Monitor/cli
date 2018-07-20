@@ -1,12 +1,7 @@
 package ai.quantumsense.tgmonitor.cli;
 
-import ai.quantumsense.tgmonitor.cli.parsing.CommandParserImpl;
-import ai.quantumsense.tgmonitor.entities.Emails;
-import ai.quantumsense.tgmonitor.entities.Patterns;
-import ai.quantumsense.tgmonitor.entities.Peers;
-import ai.quantumsense.tgmonitor.monitor.LoginCodePrompt;
-import ai.quantumsense.tgmonitor.monitor.Monitor;
-import ai.quantumsense.tgmonitor.servicelocator.ServiceLocator;
+import ai.quantumsense.tgmonitor.cli.commandparsing.CommandParserImpl;
+import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacade;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,43 +11,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Cli implements LoginCodePrompt {
+public class Cli implements MonitorFacade.LoginCodePrompt {
 
-    private static final String VERSION = "0.0.4";
+    private static String VERSION;
 
-    private ServiceLocator<Peers> peersLocator;
-    private ServiceLocator<Patterns> patternsLocator;
-    private ServiceLocator<Emails> emailsLocator;
-    private ServiceLocator<Monitor> monitorLocator;
-
+    private MonitorFacade monitorFacade;
     private CommandParser parser = new CommandParserImpl();
-
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public Cli(ServiceLocator<Peers> peersLocator,
-               ServiceLocator<Patterns> patternsLocator,
-               ServiceLocator<Emails> emailsLocator,
-               ServiceLocator<Monitor> monitorLocator,
-               ServiceLocator<LoginCodePrompt> loginCodePromptLocator) {
-        this.peersLocator = peersLocator;
-        this.patternsLocator = patternsLocator;
-        this.emailsLocator = emailsLocator;
-        this.monitorLocator = monitorLocator;
-        if (loginCodePromptLocator != null)
-            loginCodePromptLocator.registerService(this);
+    public Cli(MonitorFacade monitorFacade, String version) {
+        this.monitorFacade = monitorFacade;
+        VERSION = version;
+        monitorFacade.registerLoginCodePrompt(this);
     }
 
     public void launch() {
 
         println("TG-Monitor " + VERSION);
 
-        if (!monitorLocator.getService().isLoggedIn()) {
+        if (!monitorFacade.isLoggedIn()) {
             System.out.print("Please enter your phone number: ");
             String phoneNumber = readLine();
-            monitorLocator.getService().login(phoneNumber);
+            monitorFacade.login(phoneNumber);
         }
         println(account());
-        monitorLocator.getService().start();
+        monitorFacade.start();
 
         loop: while (true) {
             prompt();
@@ -168,22 +151,22 @@ public class Cli implements LoginCodePrompt {
     private void add(Entity entity, Set<String> items) {
         switch (entity) {
             case PEER:
-                peersLocator.getService().addPeers(items); break;
+                monitorFacade.addPeers(items); break;
             case PATTERN:
-                patternsLocator.getService().addPatterns(items); break;
+                monitorFacade.addPatterns(items); break;
             case EMAIL:
-                emailsLocator.getService().addEmails(items); break;
+                monitorFacade.addEmails(items); break;
         }
     }
 
     private void remove(Entity entity, Set<String> items) {
         switch (entity) {
             case PEER:
-                peersLocator.getService().removePeers(items); break;
+                monitorFacade.removePeers(items); break;
             case PATTERN:
-                patternsLocator.getService().removePatterns(items); break;
+                monitorFacade.removePatterns(items); break;
             case EMAIL:
-                emailsLocator.getService().removeEmails(items); break;
+                monitorFacade.removeEmails(items); break;
         }
     }
 
@@ -191,11 +174,11 @@ public class Cli implements LoginCodePrompt {
         Set<String> s;
         switch (entity) {
             case PEER:
-                s =  peersLocator.getService().getPeers(); break;
+                s =  monitorFacade.getPeers(); break;
             case PATTERN:
-                s = patternsLocator.getService().getPatterns(); break;
+                s = monitorFacade.getPatterns(); break;
             case EMAIL:
-                s = emailsLocator.getService().getEmails(); break;
+                s = monitorFacade.getEmails(); break;
             default:
                 s = null;
         }
@@ -204,17 +187,17 @@ public class Cli implements LoginCodePrompt {
     }
 
     private String account() {
-        return "Logged in with: " + monitorLocator.getService().getPhoneNumber();
+        return "Logged in with: " + monitorFacade.getPhoneNumber();
     }
 
     private void quit() {
-        monitorLocator.getService().stop();
+        monitorFacade.stop();
         println("Monitor stopped");
     }
 
     private void logout() {
-        monitorLocator.getService().stop();
-        monitorLocator.getService().logout();
+        monitorFacade.stop();
+        monitorFacade.logout();
         println("Monitor stopped and logged out");
     }
 

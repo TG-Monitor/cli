@@ -1,6 +1,6 @@
 package ai.quantumsense.tgmonitor.cli;
 
-import ai.quantumsense.tgmonitor.cli.parsing.CommandParserImpl;
+import ai.quantumsense.tgmonitor.cli.commandparsing.CommandParserImpl;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
