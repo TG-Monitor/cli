@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Cli implements MonitorFacade.LoginCodePrompt {
+public class Cli implements MonitorFacade.LoginCodePromptFacade {
 
     private static String VERSION;
 

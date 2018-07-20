@@ -7,6 +7,7 @@ import ai.quantumsense.tgmonitor.entities.Patterns;
 import ai.quantumsense.tgmonitor.entities.PatternsImpl;
 import ai.quantumsense.tgmonitor.entities.Peers;
 import ai.quantumsense.tgmonitor.entities.PeersImpl;
+import ai.quantumsense.tgmonitor.monitor.LoginCodePrompt;
 import ai.quantumsense.tgmonitor.monitor.Monitor;
 import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacade;
 import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacadeImpl;
@@ -46,14 +47,14 @@ public class CliTest {
                 return emails;
             }
         };
-        ServiceLocator<MonitorFacade.LoginCodePrompt> loginCodePromptLocator = new ServiceLocator<MonitorFacade.LoginCodePrompt>() {
-            MonitorFacade.LoginCodePrompt loginCodePrompt = null;
+        ServiceLocator<LoginCodePrompt> loginCodePromptLocator = new ServiceLocator<LoginCodePrompt>() {
+            LoginCodePrompt loginCodePrompt = null;
             @Override
-            public void registerService(MonitorFacade.LoginCodePrompt loginCodePrompt) {
+            public void registerService(LoginCodePrompt loginCodePrompt) {
                 this.loginCodePrompt = loginCodePrompt;
             }
             @Override
-            public MonitorFacade.LoginCodePrompt getService() {
+            public LoginCodePrompt getService() {
                 return loginCodePrompt;
             }
         };
@@ -75,7 +76,7 @@ public class CliTest {
                 public void logout() {}
                 @Override
                 public boolean isLoggedIn() {
-                    return true; //phoneNumber != null;
+                    return phoneNumber != null;
                 }
                 @Override
                 public void start() {
