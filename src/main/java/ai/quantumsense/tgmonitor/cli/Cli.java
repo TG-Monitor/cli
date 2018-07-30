@@ -35,6 +35,7 @@ public class Cli implements MonitorFacade.LoginCodePromptFacade {
             monitorFacade.login(phoneNumber);
         }
         println(account());
+        // TODO: check if monitor is already running
         monitorFacade.start();
 
         loop: while (true) {
