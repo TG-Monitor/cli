@@ -1,7 +1,8 @@
 package ai.quantumsense.tgmonitor.cli;
 
 import ai.quantumsense.tgmonitor.cli.commandparsing.CommandParserImpl;
-import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacade;
+import ai.quantumsense.tgmonitor.corefacade.CoreFacade;
+import ai.quantumsense.tgmonitor.logincodeprompt.LoginCodePrompt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,32 +12,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Cli implements MonitorFacade.LoginCodePromptFacade {
+public class Cli implements LoginCodePrompt {
 
     private static String VERSION;
 
-    private MonitorFacade monitorFacade;
+    private CoreFacade coreFacade;
     private CommandParser parser = new CommandParserImpl();
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public Cli(MonitorFacade monitorFacade, String version) {
-        this.monitorFacade = monitorFacade;
+    public Cli(CoreFacade coreFacade, String version) {
+        this.coreFacade = coreFacade;
         VERSION = version;
-        monitorFacade.registerLoginCodePrompt(this);
     }
 
     public void launch() {
 
         println("TG-Monitor " + VERSION);
 
-        if (!monitorFacade.isLoggedIn()) {
+        if (!coreFacade.isLoggedIn()) {
             System.out.print("Please enter your phone number: ");
             String phoneNumber = readLine();
-            monitorFacade.login(phoneNumber);
+            coreFacade.login(phoneNumber, this);
         }
         println(account());
         // TODO: check if monitor is already running
-        monitorFacade.start();
+        coreFacade.start();
 
         loop: while (true) {
             prompt();
@@ -152,22 +152,22 @@ public class Cli implements MonitorFacade.LoginCodePromptFacade {
     private void add(Entity entity, Set<String> items) {
         switch (entity) {
             case PEER:
-                monitorFacade.addPeers(items); break;
+                coreFacade.addPeers(items); break;
             case PATTERN:
-                monitorFacade.addPatterns(items); break;
+                coreFacade.addPatterns(items); break;
             case EMAIL:
-                monitorFacade.addEmails(items); break;
+                coreFacade.addEmails(items); break;
         }
     }
 
     private void remove(Entity entity, Set<String> items) {
         switch (entity) {
             case PEER:
-                monitorFacade.removePeers(items); break;
+                coreFacade.removePeers(items); break;
             case PATTERN:
-                monitorFacade.removePatterns(items); break;
+                coreFacade.removePatterns(items); break;
             case EMAIL:
-                monitorFacade.removeEmails(items); break;
+                coreFacade.removeEmails(items); break;
         }
     }
 
@@ -175,11 +175,11 @@ public class Cli implements MonitorFacade.LoginCodePromptFacade {
         Set<String> s;
         switch (entity) {
             case PEER:
-                s =  monitorFacade.getPeers(); break;
+                s =  coreFacade.getPeers(); break;
             case PATTERN:
-                s = monitorFacade.getPatterns(); break;
+                s = coreFacade.getPatterns(); break;
             case EMAIL:
-                s = monitorFacade.getEmails(); break;
+                s = coreFacade.getEmails(); break;
             default:
                 s = null;
         }
@@ -188,17 +188,17 @@ public class Cli implements MonitorFacade.LoginCodePromptFacade {
     }
 
     private String account() {
-        return "Logged in with: " + monitorFacade.getPhoneNumber();
+        return "Logged in with: " + coreFacade.getPhoneNumber();
     }
 
     private void quit() {
-        monitorFacade.stop();
+        coreFacade.stop();
         println("Monitor stopped");
     }
 
     private void logout() {
-        monitorFacade.stop();
-        monitorFacade.logout();
+        coreFacade.stop();
+        coreFacade.logout();
         println("Monitor stopped and logged out");
     }
 

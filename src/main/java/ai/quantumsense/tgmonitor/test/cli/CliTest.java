@@ -1,16 +1,16 @@
 package ai.quantumsense.tgmonitor.test.cli;
 
 import ai.quantumsense.tgmonitor.cli.Cli;
+import ai.quantumsense.tgmonitor.corefacade.CoreFacade;
+import ai.quantumsense.tgmonitor.corefacade.CoreFacadeImpl;
 import ai.quantumsense.tgmonitor.entities.Emails;
 import ai.quantumsense.tgmonitor.entities.EmailsImpl;
 import ai.quantumsense.tgmonitor.entities.Patterns;
 import ai.quantumsense.tgmonitor.entities.PatternsImpl;
 import ai.quantumsense.tgmonitor.entities.Peers;
 import ai.quantumsense.tgmonitor.entities.PeersImpl;
-import ai.quantumsense.tgmonitor.monitor.LoginCodePrompt;
+import ai.quantumsense.tgmonitor.logincodeprompt.LoginCodePrompt;
 import ai.quantumsense.tgmonitor.monitor.Monitor;
-import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacade;
-import ai.quantumsense.tgmonitor.monitorfacade.MonitorFacadeImpl;
 import ai.quantumsense.tgmonitor.servicelocator.ServiceLocator;
 
 /**
@@ -47,30 +47,19 @@ public class CliTest {
                 return emails;
             }
         };
-        ServiceLocator<LoginCodePrompt> loginCodePromptLocator = new ServiceLocator<LoginCodePrompt>() {
-            LoginCodePrompt loginCodePrompt = null;
-            @Override
-            public void registerService(LoginCodePrompt loginCodePrompt) {
-                this.loginCodePrompt = loginCodePrompt;
-            }
-            @Override
-            public LoginCodePrompt getService() {
-                return loginCodePrompt;
-            }
-        };
         ServiceLocator<Monitor> monitorLocator = new ServiceLocator<Monitor>() {
             Monitor monitor = new Monitor() {
                 private String phoneNumber = null;
                 private boolean isRunning = false;
                 @Override
-                public void login(String phoneNumber) {
+                public void login(String phoneNumber, LoginCodePrompt loginCodePrompt) {
                     this.phoneNumber = phoneNumber;
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    loginCodePromptLocator.getService().promptLoginCode();
+                    loginCodePrompt.promptLoginCode();
                 }
                 @Override
                 public void logout() {}
@@ -104,7 +93,7 @@ public class CliTest {
                 return monitor;
             }
         };
-        MonitorFacade monitorFacade = new MonitorFacadeImpl(monitorLocator, peersLocator, patternsLocator, emailsLocator, loginCodePromptLocator);
+        CoreFacade monitorFacade = new CoreFacadeImpl(monitorLocator, peersLocator, patternsLocator, emailsLocator);
         cli = new Cli(monitorFacade, "0.0.1");
     }
 

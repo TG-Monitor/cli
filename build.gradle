@@ -30,5 +30,6 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'com.github.tg-monitor:tgm-monitor-facade:master-SNAPSHOT'
+    implementation 'com.github.tg-monitor:tgm-corefacade:master-SNAPSHOT'
+    implementation 'com.github.tg-monitor:tgm-logincodeprompt:0.0.1'
 }
