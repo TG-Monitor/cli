@@ -3,6 +3,8 @@ package ai.quantumsense.tgmonitor.cli;
 import ai.quantumsense.tgmonitor.cli.commandparsing.CommandParserImpl;
 import ai.quantumsense.tgmonitor.corefacade.CoreFacade;
 import ai.quantumsense.tgmonitor.logincodeprompt.LoginCodePrompt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 public class Cli implements LoginCodePrompt {
+
+    private Logger logger = LoggerFactory.getLogger(Cli.class);
 
     private static String VERSION;
 
