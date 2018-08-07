@@ -25,19 +25,22 @@ public class Cli implements LoginCodePrompt {
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public Cli(CoreFacade coreFacade, String version) {
+        logger.debug("Creating CLI");
         this.coreFacade = coreFacade;
         VERSION = version;
     }
 
     public void launch() {
-
+        logger.debug("Launching CLI");
         println("TG-Monitor " + VERSION);
 
         if (!coreFacade.isLoggedIn()) {
+            logger.debug("Not logged in");
             System.out.print("Please enter your phone number: ");
             String phoneNumber = readLine();
             coreFacade.login(phoneNumber, this);
         }
+        logger.debug("Now logged in");
         println(account());
         // TODO: check if monitor is already running
         coreFacade.start();
