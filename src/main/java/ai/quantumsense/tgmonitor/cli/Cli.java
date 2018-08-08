@@ -243,7 +243,7 @@ public class Cli implements LoginCodePrompt {
         print("Enter login code: ");
         String loginCode = readLine();
         logger.debug("User entered the following login code: " + loginCode);
-        return readLine();
+        return loginCode;
     }
 
     private enum Entity {
