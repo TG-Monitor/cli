@@ -239,7 +239,10 @@ public class Cli implements LoginCodePrompt {
 
     @Override
     public String promptLoginCode() {
+        logger.debug("Prompting login code from user");
         print("Enter login code: ");
+        String loginCode = readLine();
+        logger.debug("User entered the following login code: " + loginCode);
         return readLine();
     }
 
