@@ -2,7 +2,7 @@ package ai.quantumsense.tgmonitor.cli;
 
 import java.util.List;
 
-public interface CommandParser {
+public interface Parser {
 
     /**
      * Parse a command-line into a tokenized list of the command and its

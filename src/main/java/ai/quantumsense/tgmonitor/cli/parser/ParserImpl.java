@@ -1,13 +1,13 @@
-package ai.quantumsense.tgmonitor.cli.commandparsing;
+package ai.quantumsense.tgmonitor.cli.parser;
 
-import ai.quantumsense.tgmonitor.cli.CommandParser;
+import ai.quantumsense.tgmonitor.cli.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandParserImpl implements CommandParser {
+public class ParserImpl implements Parser {
 
     private static final String REGEX = "\'([^\']*)\'|\"([^\"]*)\"|(\\S+)";
     private static final Pattern PATTERN = Pattern.compile(REGEX);

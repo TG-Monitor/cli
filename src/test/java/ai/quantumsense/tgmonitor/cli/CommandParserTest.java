@@ -1,6 +1,6 @@
 package ai.quantumsense.tgmonitor.cli;
 
-import ai.quantumsense.tgmonitor.cli.commandparsing.CommandParserImpl;
+import ai.quantumsense.tgmonitor.cli.parser.ParserImpl;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,11 +11,11 @@ import java.util.List;
 
 public class CommandParserTest {
 
-    private static CommandParser parser;
+    private static Parser parser;
 
     @BeforeClass
     public static void createCli() {
-        parser = new CommandParserImpl();
+        parser = new ParserImpl();
     }
 
     @Test

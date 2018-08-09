@@ -1,6 +1,7 @@
 package ai.quantumsense.tgmonitor.test.cli;
 
 import ai.quantumsense.tgmonitor.cli.Cli;
+import ai.quantumsense.tgmonitor.cli.CliLifecycle;
 import ai.quantumsense.tgmonitor.corefacade.CoreFacade;
 import ai.quantumsense.tgmonitor.corefacade.CoreFacadeImpl;
 import ai.quantumsense.tgmonitor.entities.Emails;
@@ -14,11 +15,18 @@ import ai.quantumsense.tgmonitor.monitor.Monitor;
 import ai.quantumsense.tgmonitor.servicelocator.ServiceLocator;
 
 /**
- * Dry-running the CLI. There is a fake login procedure at each startup.
+ * Dry-run of the CLI.
  */
 public class CliTest {
 
-    private static Cli cli;
+    private static String version = "0.0.5";
+    private static CoreFacade coreFacade;
+    private static CliLifecycle lifecycle = new CliLifecycle() {
+        @Override
+        public void start() {}
+        @Override
+        public void stop() {}
+    };
     static {
         ServiceLocator<Peers> peersLocator = new ServiceLocator<Peers>() {
             Peers peers = new PeersImpl(this);
@@ -50,15 +58,10 @@ public class CliTest {
         ServiceLocator<Monitor> monitorLocator = new ServiceLocator<Monitor>() {
             Monitor monitor = new Monitor() {
                 private String phoneNumber = null;
-                private boolean isRunning = false;
+                private boolean isRunning = true;
                 @Override
                 public void login(String phoneNumber, LoginCodePrompt loginCodePrompt) {
                     this.phoneNumber = phoneNumber;
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     loginCodePrompt.promptLoginCode();
                 }
                 @Override
@@ -81,8 +84,6 @@ public class CliTest {
                 }
                 @Override
                 public String getPhoneNumber() {
-                    if (phoneNumber == null)
-                        phoneNumber = "+417891234567";
                     return phoneNumber;
                 }
             };
@@ -93,11 +94,10 @@ public class CliTest {
                 return monitor;
             }
         };
-        CoreFacade monitorFacade = new CoreFacadeImpl(monitorLocator, peersLocator, patternsLocator, emailsLocator);
-        cli = new Cli(monitorFacade, "0.0.1");
+        coreFacade = new CoreFacadeImpl(monitorLocator, peersLocator, patternsLocator, emailsLocator);
     }
 
     public static void main(String[] args) {
-        cli.launch();
+        new Cli(coreFacade, lifecycle, version);
     }
 }
