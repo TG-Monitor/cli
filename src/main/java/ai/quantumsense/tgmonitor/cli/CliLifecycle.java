@@ -6,12 +6,12 @@ package ai.quantumsense.tgmonitor.cli;
  */
 public interface CliLifecycle {
     /**
-     * Called by a CLI instance immediately after it has been created.
+     * Called when CLI instance is created.
      */
-    void start();
+    void onCliCreate();
 
     /**
-     * Called by a CLI instance immediately before it terminates.
+     * Called when CLI instance is destroyed.
      */
-    void stop();
+    void onCliDestroy();
 }

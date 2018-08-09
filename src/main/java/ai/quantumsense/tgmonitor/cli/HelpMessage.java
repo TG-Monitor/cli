@@ -20,7 +20,7 @@ public class HelpMessage {
                 .append(cmdLine(ADD_EMAILS + " <email>...",         "Add one or more notification email addresses"))
                 .append(cmdLine(REMOVE_EMAILS + " <email>...",      "Remove one or more notification email addresses"))
                 .append(cmdLine(ACCOUNT_INFO,                       "Print login information"))
-                .append(cmdLine(LOGOUT,                             "Log out, stop monitor, and exit CLI"))
+                .append(cmdLine(LOGOUT,                             "Log out, onCliDestroy monitor, and exit CLI"))
                 .append(cmdLine(EXIT,                               "Exit CLI"))
                 .append(cmdLine(HELP,                               "Print this help message"))
                 .append(emptyLine())

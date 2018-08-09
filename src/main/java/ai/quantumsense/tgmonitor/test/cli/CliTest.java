@@ -23,9 +23,9 @@ public class CliTest {
     private static CoreFacade coreFacade;
     private static CliLifecycle lifecycle = new CliLifecycle() {
         @Override
-        public void start() {}
+        public void onCliCreate() {}
         @Override
-        public void stop() {}
+        public void onCliDestroy() {}
     };
     static {
         ServiceLocator<Peers> peersLocator = new ServiceLocator<Peers>() {

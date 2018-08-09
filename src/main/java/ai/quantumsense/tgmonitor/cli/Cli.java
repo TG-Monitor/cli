@@ -26,12 +26,12 @@ public class Cli implements LoginCodePrompt {
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public Cli(CoreFacade coreFacade, CliLifecycle lifecycle, String version) {
-        lifecycle.start();
+        lifecycle.onCliCreate();
         this.coreFacade = coreFacade;
         this.version = version;
         launch();
         mainloop();
-        lifecycle.stop();
+        lifecycle.onCliDestroy();
     }
 
     private void launch() {
