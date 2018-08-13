@@ -25,7 +25,7 @@ public class Cli implements LoginCodePrompt {
     private Parser parser = new ParserImpl();
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public Cli(CoreFacade coreFacade, CliLifecycle lifecycle, String version) {
+    public Cli(CoreFacade coreFacade, CliLifecycleHandler lifecycle, String version) {
         lifecycle.onCliCreate();
         this.coreFacade = coreFacade;
         this.version = version;

@@ -1,7 +1,7 @@
 package ai.quantumsense.tgmonitor.test.cli;
 
 import ai.quantumsense.tgmonitor.cli.Cli;
-import ai.quantumsense.tgmonitor.cli.CliLifecycle;
+import ai.quantumsense.tgmonitor.cli.CliLifecycleHandler;
 import ai.quantumsense.tgmonitor.corefacade.CoreFacade;
 import ai.quantumsense.tgmonitor.corefacade.CoreFacadeImpl;
 import ai.quantumsense.tgmonitor.entities.Emails;
@@ -21,7 +21,7 @@ public class CliTest {
 
     private static String version = "0.0.5";
     private static CoreFacade coreFacade;
-    private static CliLifecycle lifecycle = new CliLifecycle() {
+    private static CliLifecycleHandler lifecycle = new CliLifecycleHandler() {
         @Override
         public void onCliCreate() {}
         @Override
