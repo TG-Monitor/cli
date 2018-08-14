@@ -42,10 +42,10 @@ public class Cli implements LoginCodePrompt {
             coreFacade.login(phoneNumber, this);
         }
         out(formatAccountInfo(coreFacade.getPhoneNumber()), true);
-        if (coreFacade.isRunning())
-            out("Monitor is running", true);
-        else
-            out("Monitor is not running", true);
+        if (!coreFacade.isRunning()) coreFacade.start();
+//            out("Monitor is running", true);
+//        else
+//            out("Monitor is not running", true);
     }
 
     private void mainloop() {
