@@ -43,6 +43,9 @@ public class Cli implements LoginCodePrompt {
             coreFacade.start();
         }
         out(formatAccountInfo(coreFacade.getPhoneNumber()), true);
+        if (!coreFacade.isRunning()) {
+            coreFacade.start();
+        }
     }
 
     private void mainloop() {
