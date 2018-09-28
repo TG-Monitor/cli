@@ -40,7 +40,6 @@ public class Cli implements LoginCodePrompt {
             out("Please enter your phone number: ", false);
             String phoneNumber = readLine();
             coreFacade.login(phoneNumber, this);
-            coreFacade.start();
         }
         out(formatAccountInfo(coreFacade.getPhoneNumber()), true);
         if (!coreFacade.isRunning()) {
